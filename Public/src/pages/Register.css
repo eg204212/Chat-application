@@ -29,6 +29,7 @@ body, .background-container {
     border: 1px solid #ccc;
     background-color: white;
     border-radius: 5px;
+    gap: 2rem;
   }
   
   
@@ -36,11 +37,13 @@ body, .background-container {
   .register-form {
     display: flex;
     flex-direction: column;
+    
   }
   
   .form-group {
     margin-bottom: 15px;
     color: black;
+    gap: 2rem;
   }
 
   .backg{
@@ -56,6 +59,8 @@ body, .background-container {
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 100%;
+    gap: 2rem;
+    margin-top: 20px;
   }
   
   .error-message {

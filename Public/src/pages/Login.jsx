@@ -1,35 +1,33 @@
 import React, { useState } from 'react';
-import './Login.css'; 
+import './Login.css'; // Import CSS file for styling (create Login.css file in the same directory)
 import logo from '../assets/logo.jpg';
 import backg from '../assets/backg.png';
 
-function Register() {
+function Login() {
+  // State variables for form fields and validation errors
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
   const [errors, setErrors] = useState({});
 
+  // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
- 
+    // Form validation
     const newErrors = {};
     if (!formData.username.trim()) {
       newErrors.username = 'Username is required';
     }
-   
     if (!formData.password.trim()) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters long';
     }
-   
 
     if (Object.keys(newErrors).length === 0) {
       // No errors, proceed with form submission
       console.log('Form data:', formData);
       // Reset form fields
-      setFormData({ username: '', email: '', password: '', confirmPassword: '' });
+      setFormData({ username: '', password: '' });
       setErrors({});
     } else {
       // Update errors state with validation errors
@@ -53,17 +51,17 @@ function Register() {
     }
   };
 
-  // Function to handle login link click
-  const handleLoginClick = () => {
-    // Navigate to login page
+  // Function to handle register link click
+  const handleRegisterClick = () => {
+    // Navigate to register page
     // Example: Replace with your navigation logic
-    window.location.href = '/login'; // Redirect to the login page
+    window.location.href = '/register'; // Redirect to the register page
   };
 
   return (
     <div className="background-container">
       <img className="backg" src={backg} alt="backg" />
-      <div className="register-container">
+      <div className="login-container">
         <form className='container1'>
           <div className="horizontal-container">
             <img className="logo" src={logo} alt="logo" />
@@ -71,8 +69,8 @@ function Register() {
           </div>
         </form>
 
-        <h2>Register</h2>
-        <form onSubmit={handleSubmit} className="register-form">
+        <h2>Login</h2>
+        <form onSubmit={handleSubmit} className="login-form">
           {/* Form fields */}
           <div className="form-group">
             <label htmlFor="username">Username:</label>
@@ -87,18 +85,6 @@ function Register() {
             {errors.username && <span className="error-message">{errors.username}</span>}
           </div>
           <div className="form-group">
-            <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-            />
-            {errors.email && <span className="error-message">{errors.email}</span>}
-          </div>
-          <div className="form-group">
             <label htmlFor="password">Password:</label>
             <input
               type="password"
@@ -110,26 +96,14 @@ function Register() {
             />
             {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password:</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              required
-            />
-            {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
-          </div>
-          <button type="submit">Register</button>
+          <button type="submit">Login</button>
         </form>
-        <div className="login-link" onClick={handleLoginClick}>
-          Already have an account? <span className="login-link-text">Login</span>
+        <div className="register-link" onClick={handleRegisterClick}>
+          Don't have an account? <span className="register-link-text">Register</span>
         </div>
       </div>
     </div>
   );
 }
 
-export default Register;
+export default Login;

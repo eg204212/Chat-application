@@ -18,7 +18,7 @@ body, .background-container {
     z-index: -1;
   }
   
-  .register-container {
+  .login-container {
     position: absolute;
     top: 50%; 
     left: 70%; 
@@ -31,15 +31,13 @@ body, .background-container {
     border-radius: 5px;
   }
   
-  
-  
   .register-form {
     display: flex;
     flex-direction: column;
   }
   
   .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
     color: black;
   }
 
@@ -70,14 +68,16 @@ body, .background-container {
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
+    margin-top: 30px;
     cursor: pointer;
+    width: 100%;
     transition: background-color 0.3s ease;
   }
   
   button:hover {
     background-color: #0056b3;
   }
-  .login-link-text{
+  .register-link-text{
     color: blue;
     cursor: pointer;
   }

@@ -1,73 +1,64 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import './Register.css'; 
 import logo from '../assets/logo.jpg';
 import backg from '../assets/backg.png';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Register() {
-  // State variables for form fields and validation errors
-  const [formData, setFormData] = useState({
+  const [values, setValues] = useState({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
-  const [errors, setErrors] = useState({});
 
-  // Function to handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Form validation
-    const newErrors = {};
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
-    }
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Invalid email address';
-    }
-    if (!formData.password.trim()) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters long';
-    }
-    if (formData.confirmPassword !== formData.password) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 8000,
+    pauseOnHover: true,
+    draggable: true,
+    theme: 'dark',
+  }
 
-    if (Object.keys(newErrors).length === 0) {
-      // No errors, proceed with form submission
-      console.log('Form data:', formData);
-      // Reset form fields
-      setFormData({ username: '', email: '', password: '', confirmPassword: '' });
-      setErrors({});
-    } else {
-      // Update errors state with validation errors
-      setErrors(newErrors);
-    }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    handleValidation();
   };
 
-  // Function to handle input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-    // Clear associated error when user starts typing in a field
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: '',
+  const handleValidation = () => {
+    const { password, confirmPassword, username, email } = values;
+    
+   /* if (!username || !email || !password || !confirmPassword) {
+      toast.error("All fields are required.", );
+      return;
+    }*/
+
+    if (password !== confirmPassword) {
+      toast.error(
+        "Password and Confirm Password should be same.", {
+          toastOptions
       });
+      return false;
     }
+    else if (username.length <3){
+      toast.error("Username should be greater than 3 characters", toastOptions);
+      return false;
+    }
+    else if (password.length <8){
+      toast.error("Password should be equal or greater than 8 characters", toastOptions);
+      return false;
+    }
+    else if (email === ""){
+      toast.error("Email is required", toastOptions);
+      return false;
+    }
+
   };
 
-  // Function to handle login link click
-  const handleLoginClick = () => {
-    // Navigate to login page
-    // Example: Replace with your navigation logic
-    window.location.href = '/login'; // Redirect to the login page
+  const handlechange = (event) => {
+    setValues({ ...values, [event.target.name]: event.target.value });
   };
 
   return (
@@ -83,61 +74,39 @@ function Register() {
 
         <h2>Register</h2>
         <form onSubmit={handleSubmit} className="register-form">
+          
           {/* Form fields */}
           <div className="form-group">
-            <label htmlFor="username">Username:</label>
             <input
               type="text"
-              id="username"
+              placeholder='Username'
               name="username"
-              value={formData.username}
-              onChange={handleInputChange}
-              required
+              onChange={(e) => handlechange(e)}
             />
-            {errors.username && <span className="error-message">{errors.username}</span>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email:</label>
             <input
               type="email"
-              id="email"
+              placeholder='Email'
               name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
+              onChange={(e) => handlechange(e)}
             />
-            {errors.email && <span className="error-message">{errors.email}</span>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password:</label>
             <input
               type="password"
-              id="password"
+              placeholder='Password'
               name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              required
+              onChange={(e) => handlechange(e)}
             />
-            {errors.password && <span className="error-message">{errors.password}</span>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password:</label>
             <input
               type="password"
-              id="confirmPassword"
+              placeholder='Confirm Password'
               name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              required
-            />
-            {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
+              onChange={(e) => handlechange(e)}
+            /> 
           </div>
           <button type="submit">Register</button>
         </form>
-        <div className="login-link" onClick={handleLoginClick}>
-          Already have an account? <span className="login-link-text">Login</span>
-        </div>
+        Already have an account? <Link to="/Login">Login</Link>
       </div>
+      <ToastContainer />
     </div>
   );
 }
