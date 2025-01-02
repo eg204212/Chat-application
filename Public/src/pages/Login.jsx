@@ -1,67 +1,76 @@
-import React, { useState } from 'react';
-import './Login.css'; // Import CSS file for styling (create Login.css file in the same directory)
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+import './Login.css'; 
 import logo from '../assets/logo.jpg';
 import backg from '../assets/backg.png';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { loginRoute } from '../utils/APIRoutes';
 
 function Login() {
-  // State variables for form fields and validation errors
-  const [formData, setFormData] = useState({
+  const navigate = useNavigate()
+  const [values, setValues] = useState({
     username: '',
     password: '',
   });
-  const [errors, setErrors] = useState({});
 
-  // Function to handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Form validation
-    const newErrors = {};
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
-    }
-    if (!formData.password.trim()) {
-      newErrors.password = 'Password is required';
-    }
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 8000,
+    pauseOnHover: true,
+    draggable: true,
+    theme: 'dark',
+  }
 
-    if (Object.keys(newErrors).length === 0) {
-      // No errors, proceed with form submission
-      console.log('Form data:', formData);
-      // Reset form fields
-      setFormData({ username: '', password: '' });
-      setErrors({});
-    } else {
-      // Update errors state with validation errors
-      setErrors(newErrors);
+  useEffect(() => {
+    if (localStorage.getItem('chat-app-user')) {
+      navigate("/Chat");
     }
+  }, []);
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+      if( handleValidation()){
+        const { password, username } = values; 
+        const {data} = await axios.post(loginRoute, {
+            username,
+            password,
+          });
+          if(data.status===false) {
+            toast.error(data.msg, toastOptions);
+          }
+          if(data.status=== true){
+            localStorage.setItem('chat-app-user' , JSON.stringify(data.user)); // pass the user info to local storage
+            navigate ("/Chat");
+          }
+          
+      }
   };
 
-  // Function to handle input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-    // Clear associated error when user starts typing in a field
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: '',
-      });
-    }
-  };
+  const handleValidation = () => {
+      const { password, username } = values;
+    
+        if (password === "") {
+          toast.error("Username and Password is required", toastOptions);
+          return false;
+        }
+        else if (username === ""){
+          toast.error("Username and Password is required", toastOptions);
+          return false;
+        }
+        return true;
+    };
 
-  // Function to handle register link click
-  const handleRegisterClick = () => {
-    // Navigate to register page
-    // Example: Replace with your navigation logic
-    window.location.href = '/register'; // Redirect to the register page
+  const handlechange = (event) => {
+    setValues({ ...values, [event.target.name]: event.target.value });
   };
 
   return (
     <div className="background-container">
       <img className="backg" src={backg} alt="backg" />
-      <div className="login-container">
+      <div className="register-container">
         <form className='container1'>
           <div className="horizontal-container">
             <img className="logo" src={logo} alt="logo" />
@@ -70,38 +79,29 @@ function Login() {
         </form>
 
         <h2>Login</h2>
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className="register-form">
+          
           {/* Form fields */}
           <div className="form-group">
-            <label htmlFor="username">Username:</label>
             <input
               type="text"
-              id="username"
+              placeholder='Username'
               name="username"
-              value={formData.username}
-              onChange={handleInputChange}
-              required
+              onChange={(e) => handlechange(e)}
+              min= "3"
             />
-            {errors.username && <span className="error-message">{errors.username}</span>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password:</label>
             <input
               type="password"
-              id="password"
+              placeholder='Password'
               name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              required
+              onChange={(e) => handlechange(e)}
             />
-            {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
           <button type="submit">Login</button>
         </form>
-        <div className="register-link" onClick={handleRegisterClick}>
-          Don't have an account? <span className="register-link-text">Register</span>
-        </div>
+        Don't have an account? <Link to="/Register">Register</Link>
       </div>
+      <ToastContainer />
     </div>
   );
 }

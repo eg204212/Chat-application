@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 import './Register.css'; 
 import logo from '../assets/logo.jpg';
 import backg from '../assets/backg.png';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { registerRoute } from '../utils/APIRoutes';
 
 function Register() {
+  const navigate = useNavigate()
   const [values, setValues] = useState({
     username: '',
     email: '',
@@ -22,39 +25,56 @@ function Register() {
     theme: 'dark',
   }
 
-  const handleSubmit = (event) => {
+ useEffect(() => {
+    if (localStorage.getItem('chat-app-user')) {
+      navigate("/Chat");
+    }
+  }, []);
+  
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    handleValidation();
+      if( handleValidation()){
+        const { password, username, email } = values;
+        const {data} = await axios.post(registerRoute, {
+            username,
+            email ,
+            password,
+          });
+          if(data.status===false) {
+            toast.error(data.msg, toastOptions);
+          }
+          if(data.status=== true){
+            localStorage.setItem('chat-app-user' , JSON.stringify(data.user)); // pass the user info to local storage
+            navigate ("/");
+          }
+          
+      }
   };
 
   const handleValidation = () => {
     const { password, confirmPassword, username, email } = values;
-    
-   /* if (!username || !email || !password || !confirmPassword) {
-      toast.error("All fields are required.", );
-      return;
-    }*/
-
-    if (password !== confirmPassword) {
-      toast.error(
-        "Password and Confirm Password should be same.", {
-          toastOptions
-      });
-      return false;
-    }
-    else if (username.length <3){
-      toast.error("Username should be greater than 3 characters", toastOptions);
-      return false;
-    }
-    else if (password.length <8){
-      toast.error("Password should be equal or greater than 8 characters", toastOptions);
-      return false;
-    }
-    else if (email === ""){
-      toast.error("Email is required", toastOptions);
-      return false;
-    }
-
+  
+      if (password !== confirmPassword) {
+        toast.error(
+          "Password and Confirm Password should be same.", {
+            toastOptions
+        });
+        return false;
+      }
+      else if (username.length <3){
+        toast.error("Username should be greater than 3 characters", toastOptions);
+        return false;
+      }
+      else if (password.length <8){
+        toast.error("Password should be equal or greater than 8 characters", toastOptions);
+        return false;
+      }
+      else if (email === ""){
+        toast.error("Email is required", toastOptions);
+        return false;
+      }
+      return true;
   };
 
   const handlechange = (event) => {
