@@ -17,7 +17,7 @@ function Register() {
     confirmPassword: '',
   });
 
-  const toastOptions = {
+  const toastOptions = { 
     position: "bottom-right",
     autoClose: 8000,
     pauseOnHover: true,

@@ -40,3 +40,33 @@ module.exports.login = async (req, res, next) => {
       next(ex);
    }
 };
+module.exports.setAvatar = async (req, res, next) => {
+   try {
+     const { id } = req.params;
+     const { avatarImage } = req.body;
+ 
+     if (!avatarImage) {
+       return res.status(400).json({ msg: "Avatar image is required." });
+     }
+ 
+     const userData = await User.findByIdAndUpdate(
+       id,
+       {
+         isAvatarImageSet: true,
+         avatarImage,
+       },
+       { new: true }
+     );
+ 
+     if (!userData) {
+       return res.status(404).json({ msg: "User not found." });
+     }
+ 
+     return res.status(200).json({
+       isSet: userData.isAvatarImageSet,
+       image: userData.avatarImage,
+     });
+   } catch (ex) {
+     next(ex);
+   }
+ };
