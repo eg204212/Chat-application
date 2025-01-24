@@ -3,24 +3,18 @@ import styled from "styled-components";
 import Robot from "../assets/robot.gif";
 
 export default function Welcome({ currentUser }) {
-  if (!currentUser) {
+ 
     return (
       <Container>
-        <h3>Loading user details...</h3>
-      </Container>
-    );
-  }
-
-  return (
-    <Container>
       <img src={Robot} alt="Robot" />
       <h1>
         Welcome, <span>{currentUser.username}!</span>
       </h1>
       <h3>Please select a Chat to start messaging</h3>
     </Container>
-  );
-}
+    );
+  }
+
 
 const Container = styled.div`
   display: flex;
@@ -31,7 +25,7 @@ const Container = styled.div`
   text-align: center;
 
   img {
-    height: 20rem;
+    height: 15rem;
     border-radius: 50rem;
   }
   

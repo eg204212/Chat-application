@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import logo from "../assets/logo.jpg";
+import logo from "../assets/logo1.jpg";
 
 export default function Contacts({ contacts, currentUser , changeChat}) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
@@ -24,7 +24,7 @@ export default function Contacts({ contacts, currentUser , changeChat}) {
       {currentUserImage && currentUserName && (
         <Container>
           <div className="brand">
-            <img src={logo} alt="logo" />
+            <img src={logo} alt="logo1" />
             <h3>ChatterBox</h3>
           </div>
           <div className="contacts">
@@ -82,7 +82,7 @@ const Container = styled.div`
     gap: 1rem;
 
     img {
-      height: 2rem;
+      height: 3rem;
     }
 
     h3 {
@@ -138,13 +138,13 @@ const Container = styled.div`
       }
 
       &.selected {
-        background-color: #9a86f3;
+        background-color: #4f04ff;
       }
     }
   }
 
   .current-user {
-    background-color: #0d0d30;
+    background-color:rgb(31, 18, 85);
     display: flex;
     justify-content: center;
     align-items: center;

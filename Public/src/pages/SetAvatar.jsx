@@ -25,7 +25,7 @@ export default function SetAvatar() {
 
   useEffect(() => {
     if (!localStorage.getItem("chat-app-user")) {
-      navigate("/login");
+      navigate("/");
     }
   }, [navigate]);
 
@@ -42,7 +42,7 @@ export default function SetAvatar() {
         user.isAvatarImageSet = true;
         user.avatarImage = data.image;
         localStorage.setItem("chat-app-user", JSON.stringify(user));
-        navigate("/login");
+        navigate("/Chat");
       } else {
         toast.error("Error setting avatar. Please try again.", toastOptions);
       }
@@ -90,7 +90,7 @@ export default function SetAvatar() {
             ))}
           </div>
           <button className="submit-btn" onClick={setProfilePicture}>
-            Set as Profile Picture
+            SET
           </button>
         </Container>
       )}
@@ -144,15 +144,16 @@ const Container = styled.div`
   }
 
   .submit-btn {
+     width: 25%;
+    padding: 0.8rem;
+    border-radius: 5px;
+    border: none;
     background-color: #4e0eff;
     color: white;
-    padding: 1rem 2rem;
-    border: none;
     font-weight: bold;
+    font-size: 1rem;
     cursor: pointer;
-    border-radius: 0.4rem;
-    text-transform: uppercase;
-    transition: 0.3s ease-in-out;
+    transition: 0.3s;
 
     &:hover {
       background-color: #997af0;

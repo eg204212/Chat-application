@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from "styled-components";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import { allUserRoute } from '../utils/APIRoutes';
+import { allUserRoute , host } from '../utils/APIRoutes';
 import Contacts from '../components/Contacts';
 import Welcome from '../components/Welcome';
+import ChatContainer from '../components/ChatContainer';
+import {io} from "socket.io-client";
 
 function Chat() {
+  const socket = useRef();
   const navigate = useNavigate();
   const [contacts, setContacts] = useState([]);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [currentChat , setCurrentChat] = useState(undefined);
+  const [isLoaded , setIsLoaded] = useState(false);
 
   // Check if a user exists in localStorage and set the current user
   useEffect(() => {
@@ -20,10 +24,18 @@ function Chat() {
       } else {
         const storedUser = await JSON.parse(localStorage.getItem("chat-app-user"));
         setCurrentUser(storedUser);
+        setIsLoaded(true);
       }
     };
     fetchUser();
   }, [navigate]);
+
+  useEffect(() =>{
+    if(currentUser){
+      socket.current = io(host);
+      socket.current.emit("add-user", currentUser._id);
+    }
+  }, [currentUser])
 
   // Fetch contacts for the current user if the avatar is set
   useEffect(() => {
@@ -50,13 +62,19 @@ function Chat() {
   return (
     <Container>
       <div className='container'>
-      <Contacts contacts={contacts} 
+      <Contacts 
+      contacts={contacts} 
       currentUser={currentUser} 
       changeChat ={handleChatChange} 
       />
-      <Welcome
-        currentUser={currentUser} 
-        />
+      {isLoaded && currentChat === undefined ? (
+        <Welcome currentUser= {currentUser} /> 
+      ):(
+        <ChatContainer 
+        currentChat= {currentChat} 
+        currentUser= {currentUser}
+        socket = {socket}/>
+      )} 
       </div>
     </Container>
   );
@@ -73,14 +91,14 @@ const Container = styled.div`
   background-color: #131324;
 
   .container {
-    height: 85vh;
-    width: 85vw;
+    height: 90vh;
+    width: 90vw;
     background-color: #00000076;
     display: grid;
     grid-template-columns: 25% 75%;
 
     @media screen and (min-width: 720px) and (max-width: 1080px) {
-      grid-template-columns: 35% 65%; /* Responsive for mobile devices */
+      grid-template-columns: 35% 65%;
     }
   }
 `;

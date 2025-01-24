@@ -1,5 +1,5 @@
 const User = require("../model/userModel");
-const bcrypt = require("bcrypt"); // Correct the spelling from 'brcypt' to 'bcrypt'
+const bcrypt = require("bcrypt"); 
 
 module.exports.register = async (req, res, next) => {
    try {
@@ -16,7 +16,7 @@ module.exports.register = async (req, res, next) => {
          username,
          password: hashedPassword,
       });
-      delete user.password; // Remove password from the user object before sending it
+      delete user.password; 
       return res.json({ status: true, user });
    } catch (ex) {
       next(ex);
